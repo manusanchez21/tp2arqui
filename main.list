@@ -5,417 +5,423 @@ main.elf:     file format elf64-littleaarch64
 Disassembly of section .text:
 
 0000000040080000 <_start>:
-    40080000:	58001ac0 	ldr	x0, 40080358 <log_event_done+0xc>
+    40080000:	58001b00 	ldr	x0, 40080360 <log_event_done+0xc>
     40080004:	9100001f 	mov	sp, x0
     40080008:	d2800013 	mov	x19, #0x0                   	// #0
 
 000000004008000c <main_loop>:
-    4008000c:	f100167f 	cmp	x19, #0x5
-    40080010:	540001ea 	b.ge	4008004c <main_end>  // b.tcont
-    40080014:	58001a60 	ldr	x0, 40080360 <log_event_done+0x14>
+    4008000c:	f101927f 	cmp	x19, #0x64
+    40080010:	5400020a 	b.ge	40080050 <skip_report>  // b.tcont
+    40080014:	58001aa0 	ldr	x0, 40080368 <log_event_done+0x14>
     40080018:	b9400001 	ldr	w1, [x0]
     4008001c:	11000421 	add	w1, w1, #0x1
     40080020:	b9000001 	str	w1, [x0]
     40080024:	d2800000 	mov	x0, #0x0                   	// #0
-    40080028:	9400000d 	bl	4008005c <process_sensor>
+    40080028:	9400000f 	bl	40080064 <process_sensor>
     4008002c:	d2800020 	mov	x0, #0x1                   	// #1
-    40080030:	9400000b 	bl	4008005c <process_sensor>
+    40080030:	9400000d 	bl	40080064 <process_sensor>
     40080034:	d2800040 	mov	x0, #0x2                   	// #2
-    40080038:	94000009 	bl	4008005c <process_sensor>
+    40080038:	9400000b 	bl	40080064 <process_sensor>
     4008003c:	d2800060 	mov	x0, #0x3                   	// #3
-    40080040:	94000007 	bl	4008005c <process_sensor>
+    40080040:	94000009 	bl	40080064 <process_sensor>
     40080044:	91000673 	add	x19, x19, #0x1
     40080048:	17fffff1 	b	4008000c <main_loop>
 
-000000004008004c <main_end>:
-    4008004c:	d2800300 	mov	x0, #0x18                  	// #24
-    40080050:	f2a04000 	movk	x0, #0x200, lsl #16
-    40080054:	d2800001 	mov	x1, #0x0                   	// #0
-    40080058:	d45e0000 	hlt	#0xf000
+000000004008004c <generate_report>:
+    4008004c:	d65f03c0 	ret
 
-000000004008005c <process_sensor>:
-    4008005c:	a9bc7bfd 	stp	x29, x30, [sp, #-64]!
-    40080060:	910003fd 	mov	x29, sp
-    40080064:	a90153f3 	stp	x19, x20, [sp, #16]
-    40080068:	a9025bf5 	stp	x21, x22, [sp, #32]
-    4008006c:	a90363f7 	stp	x23, x24, [sp, #48]
-    40080070:	aa0003f3 	mov	x19, x0
-    40080074:	aa1303e0 	mov	x0, x19
-    40080078:	94000035 	bl	4008014c <sensor_read>
-    4008007c:	aa0003f4 	mov	x20, x0
-    40080080:	58001755 	ldr	x21, 40080368 <log_event_done+0x1c>
-    40080084:	58001776 	ldr	x22, 40080370 <log_event_done+0x24>
-    40080088:	58001797 	ldr	x23, 40080378 <log_event_done+0x2c>
-    4008008c:	580017b8 	ldr	x24, 40080380 <log_event_done+0x34>
-    40080090:	f100067f 	cmp	x19, #0x1
-    40080094:	540000c0 	b.eq	400800ac <setup_temp>  // b.none
-    40080098:	f1000a7f 	cmp	x19, #0x2
-    4008009c:	54000120 	b.eq	400800c0 <setup_pres>  // b.none
-    400800a0:	f1000e7f 	cmp	x19, #0x3
-    400800a4:	54000180 	b.eq	400800d4 <setup_part>  // b.none
-    400800a8:	1400000f 	b	400800e4 <setup_done>
+0000000040080050 <skip_report>:
+    40080050:	14000001 	b	40080054 <program_end>
 
-00000000400800ac <setup_temp>:
-    400800ac:	580016f5 	ldr	x21, 40080388 <log_event_done+0x3c>
-    400800b0:	58001716 	ldr	x22, 40080390 <log_event_done+0x44>
-    400800b4:	58001737 	ldr	x23, 40080398 <log_event_done+0x4c>
-    400800b8:	58001758 	ldr	x24, 400803a0 <log_event_done+0x54>
-    400800bc:	1400000a 	b	400800e4 <setup_done>
+0000000040080054 <program_end>:
+    40080054:	d2800300 	mov	x0, #0x18                  	// #24
+    40080058:	f2a04000 	movk	x0, #0x200, lsl #16
+    4008005c:	d2800001 	mov	x1, #0x0                   	// #0
+    40080060:	d45e0000 	hlt	#0xf000
 
-00000000400800c0 <setup_pres>:
-    400800c0:	58001755 	ldr	x21, 400803a8 <log_event_done+0x5c>
-    400800c4:	58001776 	ldr	x22, 400803b0 <log_event_done+0x64>
-    400800c8:	58001797 	ldr	x23, 400803b8 <log_event_done+0x6c>
-    400800cc:	580017b8 	ldr	x24, 400803c0 <log_event_done+0x74>
-    400800d0:	14000005 	b	400800e4 <setup_done>
+0000000040080064 <process_sensor>:
+    40080064:	a9bc7bfd 	stp	x29, x30, [sp, #-64]!
+    40080068:	910003fd 	mov	x29, sp
+    4008006c:	a90153f3 	stp	x19, x20, [sp, #16]
+    40080070:	a9025bf5 	stp	x21, x22, [sp, #32]
+    40080074:	a90363f7 	stp	x23, x24, [sp, #48]
+    40080078:	aa0003f3 	mov	x19, x0
+    4008007c:	aa1303e0 	mov	x0, x19
+    40080080:	94000035 	bl	40080154 <sensor_read>
+    40080084:	aa0003f4 	mov	x20, x0
+    40080088:	58001755 	ldr	x21, 40080370 <log_event_done+0x1c>
+    4008008c:	58001776 	ldr	x22, 40080378 <log_event_done+0x24>
+    40080090:	58001797 	ldr	x23, 40080380 <log_event_done+0x2c>
+    40080094:	580017b8 	ldr	x24, 40080388 <log_event_done+0x34>
+    40080098:	f100067f 	cmp	x19, #0x1
+    4008009c:	540000c0 	b.eq	400800b4 <setup_temp>  // b.none
+    400800a0:	f1000a7f 	cmp	x19, #0x2
+    400800a4:	54000120 	b.eq	400800c8 <setup_pres>  // b.none
+    400800a8:	f1000e7f 	cmp	x19, #0x3
+    400800ac:	54000180 	b.eq	400800dc <setup_part>  // b.none
+    400800b0:	1400000f 	b	400800ec <setup_done>
 
-00000000400800d4 <setup_part>:
-    400800d4:	580017b5 	ldr	x21, 400803c8 <log_event_done+0x7c>
-    400800d8:	580017d6 	ldr	x22, 400803d0 <log_event_done+0x84>
-    400800dc:	580017f7 	ldr	x23, 400803d8 <log_event_done+0x8c>
-    400800e0:	58001818 	ldr	x24, 400803e0 <log_event_done+0x94>
+00000000400800b4 <setup_temp>:
+    400800b4:	580016f5 	ldr	x21, 40080390 <log_event_done+0x3c>
+    400800b8:	58001716 	ldr	x22, 40080398 <log_event_done+0x44>
+    400800bc:	58001737 	ldr	x23, 400803a0 <log_event_done+0x4c>
+    400800c0:	58001758 	ldr	x24, 400803a8 <log_event_done+0x54>
+    400800c4:	1400000a 	b	400800ec <setup_done>
 
-00000000400800e4 <setup_done>:
-    400800e4:	aa1503e0 	mov	x0, x21
-    400800e8:	aa1403e1 	mov	x1, x20
-    400800ec:	aa1603e2 	mov	x2, x22
-    400800f0:	aa1703e3 	mov	x3, x23
-    400800f4:	94000032 	bl	400801bc <buffer_write>
-    400800f8:	aa1503e0 	mov	x0, x21
-    400800fc:	d2800141 	mov	x1, #0xa                   	// #10
-    40080100:	aa1703e2 	mov	x2, x23
-    40080104:	9400003d 	bl	400801f8 <moving_average>
-    40080108:	aa0003f4 	mov	x20, x0
-    4008010c:	b9000314 	str	w20, [x24]
-    40080110:	aa1403e0 	mov	x0, x20
-    40080114:	aa1303e1 	mov	x1, x19
-    40080118:	94000052 	bl	40080260 <check_alert>
-    4008011c:	b40000e0 	cbz	x0, 40080138 <skip_log>
-    40080120:	aa0003e2 	mov	x2, x0
-    40080124:	aa1303e0 	mov	x0, x19
-    40080128:	aa1403e1 	mov	x1, x20
-    4008012c:	580011a3 	ldr	x3, 40080360 <log_event_done+0x14>
-    40080130:	b9400063 	ldr	w3, [x3]
-    40080134:	9400006f 	bl	400802f0 <log_event>
+00000000400800c8 <setup_pres>:
+    400800c8:	58001755 	ldr	x21, 400803b0 <log_event_done+0x5c>
+    400800cc:	58001776 	ldr	x22, 400803b8 <log_event_done+0x64>
+    400800d0:	58001797 	ldr	x23, 400803c0 <log_event_done+0x6c>
+    400800d4:	580017b8 	ldr	x24, 400803c8 <log_event_done+0x74>
+    400800d8:	14000005 	b	400800ec <setup_done>
 
-0000000040080138 <skip_log>:
-    40080138:	a94363f7 	ldp	x23, x24, [sp, #48]
-    4008013c:	a9425bf5 	ldp	x21, x22, [sp, #32]
-    40080140:	a94153f3 	ldp	x19, x20, [sp, #16]
-    40080144:	a8c47bfd 	ldp	x29, x30, [sp], #64
-    40080148:	d65f03c0 	ret
+00000000400800dc <setup_part>:
+    400800dc:	580017b5 	ldr	x21, 400803d0 <log_event_done+0x7c>
+    400800e0:	580017d6 	ldr	x22, 400803d8 <log_event_done+0x84>
+    400800e4:	580017f7 	ldr	x23, 400803e0 <log_event_done+0x8c>
+    400800e8:	58001818 	ldr	x24, 400803e8 <log_event_done+0x94>
 
-000000004008014c <sensor_read>:
-    4008014c:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
-    40080150:	910003fd 	mov	x29, sp
-    40080154:	f1000c1f 	cmp	x0, #0x3
-    40080158:	540002a8 	b.hi	400801ac <sensor_read_error>  // b.pmore
-    4008015c:	58001461 	ldr	x1, 400803e8 <log_event_done+0x9c>
-    40080160:	b8607822 	ldr	w2, [x1, x0, lsl #2]
-    40080164:	58000fe3 	ldr	x3, 40080360 <log_event_done+0x14>
-    40080168:	b9400064 	ldr	w4, [x3]
-    4008016c:	12000c84 	and	w4, w4, #0xf
-    40080170:	f100001f 	cmp	x0, #0x0
-    40080174:	540000c0 	b.eq	4008018c <sensor_read_rad>  // b.none
-    40080178:	f100041f 	cmp	x0, #0x1
-    4008017c:	540000c0 	b.eq	40080194 <sensor_read_temp>  // b.none
-    40080180:	f100081f 	cmp	x0, #0x2
-    40080184:	540000c0 	b.eq	4008019c <sensor_read_pres>  // b.none
-    40080188:	14000007 	b	400801a4 <sensor_read_part>
+00000000400800ec <setup_done>:
+    400800ec:	aa1503e0 	mov	x0, x21
+    400800f0:	aa1403e1 	mov	x1, x20
+    400800f4:	aa1603e2 	mov	x2, x22
+    400800f8:	aa1703e3 	mov	x3, x23
+    400800fc:	94000032 	bl	400801c4 <buffer_write>
+    40080100:	aa1503e0 	mov	x0, x21
+    40080104:	d2800141 	mov	x1, #0xa                   	// #10
+    40080108:	aa1703e2 	mov	x2, x23
+    4008010c:	9400003d 	bl	40080200 <moving_average>
+    40080110:	aa0003f4 	mov	x20, x0
+    40080114:	b9000314 	str	w20, [x24]
+    40080118:	aa1403e0 	mov	x0, x20
+    4008011c:	aa1303e1 	mov	x1, x19
+    40080120:	94000052 	bl	40080268 <check_alert>
+    40080124:	b40000e0 	cbz	x0, 40080140 <skip_log>
+    40080128:	aa0003e2 	mov	x2, x0
+    4008012c:	aa1303e0 	mov	x0, x19
+    40080130:	aa1403e1 	mov	x1, x20
+    40080134:	580011a3 	ldr	x3, 40080368 <log_event_done+0x14>
+    40080138:	b9400063 	ldr	w3, [x3]
+    4008013c:	9400006f 	bl	400802f8 <log_event>
 
-000000004008018c <sensor_read_rad>:
-    4008018c:	0b040040 	add	w0, w2, w4
-    40080190:	14000008 	b	400801b0 <sensor_read_done>
+0000000040080140 <skip_log>:
+    40080140:	a94363f7 	ldp	x23, x24, [sp, #48]
+    40080144:	a9425bf5 	ldp	x21, x22, [sp, #32]
+    40080148:	a94153f3 	ldp	x19, x20, [sp, #16]
+    4008014c:	a8c47bfd 	ldp	x29, x30, [sp], #64
+    40080150:	d65f03c0 	ret
 
-0000000040080194 <sensor_read_temp>:
-    40080194:	4b040040 	sub	w0, w2, w4
-    40080198:	14000006 	b	400801b0 <sensor_read_done>
+0000000040080154 <sensor_read>:
+    40080154:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
+    40080158:	910003fd 	mov	x29, sp
+    4008015c:	f1000c1f 	cmp	x0, #0x3
+    40080160:	540002a8 	b.hi	400801b4 <sensor_read_error>  // b.pmore
+    40080164:	58001461 	ldr	x1, 400803f0 <log_event_done+0x9c>
+    40080168:	b8607822 	ldr	w2, [x1, x0, lsl #2]
+    4008016c:	58000fe3 	ldr	x3, 40080368 <log_event_done+0x14>
+    40080170:	b9400064 	ldr	w4, [x3]
+    40080174:	12000c84 	and	w4, w4, #0xf
+    40080178:	f100001f 	cmp	x0, #0x0
+    4008017c:	540000c0 	b.eq	40080194 <sensor_read_rad>  // b.none
+    40080180:	f100041f 	cmp	x0, #0x1
+    40080184:	540000c0 	b.eq	4008019c <sensor_read_temp>  // b.none
+    40080188:	f100081f 	cmp	x0, #0x2
+    4008018c:	540000c0 	b.eq	400801a4 <sensor_read_pres>  // b.none
+    40080190:	14000007 	b	400801ac <sensor_read_part>
 
-000000004008019c <sensor_read_pres>:
-    4008019c:	0b040040 	add	w0, w2, w4
-    400801a0:	14000004 	b	400801b0 <sensor_read_done>
+0000000040080194 <sensor_read_rad>:
+    40080194:	0b040040 	add	w0, w2, w4
+    40080198:	14000008 	b	400801b8 <sensor_read_done>
 
-00000000400801a4 <sensor_read_part>:
+000000004008019c <sensor_read_temp>:
+    4008019c:	4b040040 	sub	w0, w2, w4
+    400801a0:	14000006 	b	400801b8 <sensor_read_done>
+
+00000000400801a4 <sensor_read_pres>:
     400801a4:	0b040040 	add	w0, w2, w4
-    400801a8:	14000002 	b	400801b0 <sensor_read_done>
+    400801a8:	14000004 	b	400801b8 <sensor_read_done>
 
-00000000400801ac <sensor_read_error>:
-    400801ac:	d2800000 	mov	x0, #0x0                   	// #0
+00000000400801ac <sensor_read_part>:
+    400801ac:	0b040040 	add	w0, w2, w4
+    400801b0:	14000002 	b	400801b8 <sensor_read_done>
 
-00000000400801b0 <sensor_read_done>:
-    400801b0:	93407c00 	sxtw	x0, w0
-    400801b4:	a8c17bfd 	ldp	x29, x30, [sp], #16
-    400801b8:	d65f03c0 	ret
+00000000400801b4 <sensor_read_error>:
+    400801b4:	d2800000 	mov	x0, #0x0                   	// #0
 
-00000000400801bc <buffer_write>:
-    400801bc:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
-    400801c0:	910003fd 	mov	x29, sp
-    400801c4:	b9400044 	ldr	w4, [x2]
-    400801c8:	b8245801 	str	w1, [x0, w4, uxtw #2]
-    400801cc:	11000484 	add	w4, w4, #0x1
-    400801d0:	7101909f 	cmp	w4, #0x64
-    400801d4:	1a8403e4 	csel	w4, wzr, w4, eq	// eq = none
-    400801d8:	b9000044 	str	w4, [x2]
-    400801dc:	b9400065 	ldr	w5, [x3]
-    400801e0:	710190bf 	cmp	w5, #0x64
-    400801e4:	5400006a 	b.ge	400801f0 <buffer_write_skip_count>  // b.tcont
-    400801e8:	110004a5 	add	w5, w5, #0x1
-    400801ec:	b9000065 	str	w5, [x3]
+00000000400801b8 <sensor_read_done>:
+    400801b8:	93407c00 	sxtw	x0, w0
+    400801bc:	a8c17bfd 	ldp	x29, x30, [sp], #16
+    400801c0:	d65f03c0 	ret
 
-00000000400801f0 <buffer_write_skip_count>:
-    400801f0:	a8c17bfd 	ldp	x29, x30, [sp], #16
-    400801f4:	d65f03c0 	ret
+00000000400801c4 <buffer_write>:
+    400801c4:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
+    400801c8:	910003fd 	mov	x29, sp
+    400801cc:	b9400044 	ldr	w4, [x2]
+    400801d0:	b8245801 	str	w1, [x0, w4, uxtw #2]
+    400801d4:	11000484 	add	w4, w4, #0x1
+    400801d8:	7101909f 	cmp	w4, #0x64
+    400801dc:	1a8403e4 	csel	w4, wzr, w4, eq	// eq = none
+    400801e0:	b9000044 	str	w4, [x2]
+    400801e4:	b9400065 	ldr	w5, [x3]
+    400801e8:	710190bf 	cmp	w5, #0x64
+    400801ec:	5400006a 	b.ge	400801f8 <buffer_write_skip_count>  // b.tcont
+    400801f0:	110004a5 	add	w5, w5, #0x1
+    400801f4:	b9000065 	str	w5, [x3]
 
-00000000400801f8 <moving_average>:
-    400801f8:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
-    400801fc:	910003fd 	mov	x29, sp
-    40080200:	a90153f3 	stp	x19, x20, [sp, #16]
-    40080204:	a9025bf5 	stp	x21, x22, [sp, #32]
-    40080208:	aa0003f3 	mov	x19, x0
-    4008020c:	aa0103f4 	mov	x20, x1
-    40080210:	b9400055 	ldr	w21, [x2]
-    40080214:	6b1402bf 	cmp	w21, w20
-    40080218:	1a94b2b4 	csel	w20, w21, w20, lt	// lt = tstop
-    4008021c:	34000194 	cbz	w20, 4008024c <moving_avg_zero>
-    40080220:	d2800005 	mov	x5, #0x0                   	// #0
-    40080224:	d2800006 	mov	x6, #0x0                   	// #0
+00000000400801f8 <buffer_write_skip_count>:
+    400801f8:	a8c17bfd 	ldp	x29, x30, [sp], #16
+    400801fc:	d65f03c0 	ret
 
-0000000040080228 <moving_avg_loop>:
-    40080228:	eb1400df 	cmp	x6, x20
-    4008022c:	540000ca 	b.ge	40080244 <moving_avg_done>  // b.tcont
-    40080230:	b8667a67 	ldr	w7, [x19, x6, lsl #2]
-    40080234:	93407ce7 	sxtw	x7, w7
-    40080238:	8b0700a5 	add	x5, x5, x7
-    4008023c:	910004c6 	add	x6, x6, #0x1
-    40080240:	17fffffa 	b	40080228 <moving_avg_loop>
+0000000040080200 <moving_average>:
+    40080200:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+    40080204:	910003fd 	mov	x29, sp
+    40080208:	a90153f3 	stp	x19, x20, [sp, #16]
+    4008020c:	a9025bf5 	stp	x21, x22, [sp, #32]
+    40080210:	aa0003f3 	mov	x19, x0
+    40080214:	aa0103f4 	mov	x20, x1
+    40080218:	b9400055 	ldr	w21, [x2]
+    4008021c:	6b1402bf 	cmp	w21, w20
+    40080220:	1a94b2b4 	csel	w20, w21, w20, lt	// lt = tstop
+    40080224:	34000194 	cbz	w20, 40080254 <moving_avg_zero>
+    40080228:	d2800005 	mov	x5, #0x0                   	// #0
+    4008022c:	d2800006 	mov	x6, #0x0                   	// #0
 
-0000000040080244 <moving_avg_done>:
-    40080244:	9ad40ca0 	sdiv	x0, x5, x20
-    40080248:	14000002 	b	40080250 <moving_avg_exit>
+0000000040080230 <moving_avg_loop>:
+    40080230:	eb1400df 	cmp	x6, x20
+    40080234:	540000ca 	b.ge	4008024c <moving_avg_done>  // b.tcont
+    40080238:	b8667a67 	ldr	w7, [x19, x6, lsl #2]
+    4008023c:	93407ce7 	sxtw	x7, w7
+    40080240:	8b0700a5 	add	x5, x5, x7
+    40080244:	910004c6 	add	x6, x6, #0x1
+    40080248:	17fffffa 	b	40080230 <moving_avg_loop>
 
-000000004008024c <moving_avg_zero>:
-    4008024c:	d2800000 	mov	x0, #0x0                   	// #0
+000000004008024c <moving_avg_done>:
+    4008024c:	9ad40ca0 	sdiv	x0, x5, x20
+    40080250:	14000002 	b	40080258 <moving_avg_exit>
 
-0000000040080250 <moving_avg_exit>:
-    40080250:	a94153f3 	ldp	x19, x20, [sp, #16]
-    40080254:	a9425bf5 	ldp	x21, x22, [sp, #32]
-    40080258:	a8c37bfd 	ldp	x29, x30, [sp], #48
-    4008025c:	d65f03c0 	ret
+0000000040080254 <moving_avg_zero>:
+    40080254:	d2800000 	mov	x0, #0x0                   	// #0
 
-0000000040080260 <check_alert>:
-    40080260:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
-    40080264:	910003fd 	mov	x29, sp
-    40080268:	f1000c3f 	cmp	x1, #0x3
-    4008026c:	54000308 	b.hi	400802cc <check_alert_none>  // b.pmore
-    40080270:	58000c02 	ldr	x2, 400803f0 <log_event_done+0xa4>
-    40080274:	d2800183 	mov	x3, #0xc                   	// #12
-    40080278:	9b037c23 	mul	x3, x1, x3
-    4008027c:	8b030042 	add	x2, x2, x3
-    40080280:	b9400044 	ldr	w4, [x2]
-    40080284:	b9400445 	ldr	w5, [x2, #4]
-    40080288:	b9400846 	ldr	w6, [x2, #8]
-    4008028c:	f100043f 	cmp	x1, #0x1
-    40080290:	54000100 	b.eq	400802b0 <check_alert_temp>  // b.none
-    40080294:	6b06001f 	cmp	w0, w6
-    40080298:	5400026a 	b.ge	400802e4 <check_alert_level3>  // b.tcont
-    4008029c:	6b05001f 	cmp	w0, w5
-    400802a0:	540001ea 	b.ge	400802dc <check_alert_level2>  // b.tcont
-    400802a4:	6b04001f 	cmp	w0, w4
-    400802a8:	5400016a 	b.ge	400802d4 <check_alert_level1>  // b.tcont
-    400802ac:	14000008 	b	400802cc <check_alert_none>
+0000000040080258 <moving_avg_exit>:
+    40080258:	a94153f3 	ldp	x19, x20, [sp, #16]
+    4008025c:	a9425bf5 	ldp	x21, x22, [sp, #32]
+    40080260:	a8c37bfd 	ldp	x29, x30, [sp], #48
+    40080264:	d65f03c0 	ret
 
-00000000400802b0 <check_alert_temp>:
-    400802b0:	6b06001f 	cmp	w0, w6
-    400802b4:	5400018d 	b.le	400802e4 <check_alert_level3>
-    400802b8:	6b05001f 	cmp	w0, w5
-    400802bc:	5400010d 	b.le	400802dc <check_alert_level2>
-    400802c0:	6b04001f 	cmp	w0, w4
-    400802c4:	5400008d 	b.le	400802d4 <check_alert_level1>
-    400802c8:	14000001 	b	400802cc <check_alert_none>
+0000000040080268 <check_alert>:
+    40080268:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
+    4008026c:	910003fd 	mov	x29, sp
+    40080270:	f1000c3f 	cmp	x1, #0x3
+    40080274:	54000308 	b.hi	400802d4 <check_alert_none>  // b.pmore
+    40080278:	58000c02 	ldr	x2, 400803f8 <log_event_done+0xa4>
+    4008027c:	d2800183 	mov	x3, #0xc                   	// #12
+    40080280:	9b037c23 	mul	x3, x1, x3
+    40080284:	8b030042 	add	x2, x2, x3
+    40080288:	b9400044 	ldr	w4, [x2]
+    4008028c:	b9400445 	ldr	w5, [x2, #4]
+    40080290:	b9400846 	ldr	w6, [x2, #8]
+    40080294:	f100043f 	cmp	x1, #0x1
+    40080298:	54000100 	b.eq	400802b8 <check_alert_temp>  // b.none
+    4008029c:	6b06001f 	cmp	w0, w6
+    400802a0:	5400026a 	b.ge	400802ec <check_alert_level3>  // b.tcont
+    400802a4:	6b05001f 	cmp	w0, w5
+    400802a8:	540001ea 	b.ge	400802e4 <check_alert_level2>  // b.tcont
+    400802ac:	6b04001f 	cmp	w0, w4
+    400802b0:	5400016a 	b.ge	400802dc <check_alert_level1>  // b.tcont
+    400802b4:	14000008 	b	400802d4 <check_alert_none>
 
-00000000400802cc <check_alert_none>:
-    400802cc:	d2800000 	mov	x0, #0x0                   	// #0
-    400802d0:	14000006 	b	400802e8 <check_alert_done>
+00000000400802b8 <check_alert_temp>:
+    400802b8:	6b06001f 	cmp	w0, w6
+    400802bc:	5400018d 	b.le	400802ec <check_alert_level3>
+    400802c0:	6b05001f 	cmp	w0, w5
+    400802c4:	5400010d 	b.le	400802e4 <check_alert_level2>
+    400802c8:	6b04001f 	cmp	w0, w4
+    400802cc:	5400008d 	b.le	400802dc <check_alert_level1>
+    400802d0:	14000001 	b	400802d4 <check_alert_none>
 
-00000000400802d4 <check_alert_level1>:
-    400802d4:	d2800020 	mov	x0, #0x1                   	// #1
-    400802d8:	14000004 	b	400802e8 <check_alert_done>
+00000000400802d4 <check_alert_none>:
+    400802d4:	d2800000 	mov	x0, #0x0                   	// #0
+    400802d8:	14000006 	b	400802f0 <check_alert_done>
 
-00000000400802dc <check_alert_level2>:
-    400802dc:	d2800040 	mov	x0, #0x2                   	// #2
-    400802e0:	14000002 	b	400802e8 <check_alert_done>
+00000000400802dc <check_alert_level1>:
+    400802dc:	d2800020 	mov	x0, #0x1                   	// #1
+    400802e0:	14000004 	b	400802f0 <check_alert_done>
 
-00000000400802e4 <check_alert_level3>:
-    400802e4:	d2800060 	mov	x0, #0x3                   	// #3
+00000000400802e4 <check_alert_level2>:
+    400802e4:	d2800040 	mov	x0, #0x2                   	// #2
+    400802e8:	14000002 	b	400802f0 <check_alert_done>
 
-00000000400802e8 <check_alert_done>:
-    400802e8:	a8c17bfd 	ldp	x29, x30, [sp], #16
-    400802ec:	d65f03c0 	ret
+00000000400802ec <check_alert_level3>:
+    400802ec:	d2800060 	mov	x0, #0x3                   	// #3
 
-00000000400802f0 <log_event>:
-    400802f0:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
-    400802f4:	910003fd 	mov	x29, sp
-    400802f8:	b40002a2 	cbz	x2, 4008034c <log_event_done>
-    400802fc:	580007e4 	ldr	x4, 400803f8 <log_event_done+0xac>
-    40080300:	b9400085 	ldr	w5, [x4]
-    40080304:	93407ca5 	sxtw	x5, w5
-    40080308:	580007c6 	ldr	x6, 40080400 <log_event_done+0xb4>
-    4008030c:	d37ceca7 	lsl	x7, x5, #4
-    40080310:	8b0700c6 	add	x6, x6, x7
-    40080314:	b90000c0 	str	w0, [x6]
-    40080318:	b90004c1 	str	w1, [x6, #4]
-    4008031c:	b90008c2 	str	w2, [x6, #8]
-    40080320:	b9000cc3 	str	w3, [x6, #12]
-    40080324:	110004a5 	add	w5, w5, #0x1
-    40080328:	7100c8bf 	cmp	w5, #0x32
-    4008032c:	1a8503e5 	csel	w5, wzr, w5, eq	// eq = none
-    40080330:	b9000085 	str	w5, [x4]
-    40080334:	580006a8 	ldr	x8, 40080408 <log_event_done+0xbc>
-    40080338:	b9400109 	ldr	w9, [x8]
-    4008033c:	7100c93f 	cmp	w9, #0x32
-    40080340:	5400006a 	b.ge	4008034c <log_event_done>  // b.tcont
-    40080344:	11000529 	add	w9, w9, #0x1
-    40080348:	b9000109 	str	w9, [x8]
+00000000400802f0 <check_alert_done>:
+    400802f0:	a8c17bfd 	ldp	x29, x30, [sp], #16
+    400802f4:	d65f03c0 	ret
 
-000000004008034c <log_event_done>:
-    4008034c:	a8c17bfd 	ldp	x29, x30, [sp], #16
-    40080350:	d65f03c0 	ret
-    40080354:	00000000 	udf	#0
-    40080358:	40480000 	.inst	0x40480000 ; undefined
+00000000400802f8 <log_event>:
+    400802f8:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
+    400802fc:	910003fd 	mov	x29, sp
+    40080300:	b40002a2 	cbz	x2, 40080354 <log_event_done>
+    40080304:	580007e4 	ldr	x4, 40080400 <log_event_done+0xac>
+    40080308:	b9400085 	ldr	w5, [x4]
+    4008030c:	93407ca5 	sxtw	x5, w5
+    40080310:	580007c6 	ldr	x6, 40080408 <log_event_done+0xb4>
+    40080314:	d37ceca7 	lsl	x7, x5, #4
+    40080318:	8b0700c6 	add	x6, x6, x7
+    4008031c:	b90000c0 	str	w0, [x6]
+    40080320:	b90004c1 	str	w1, [x6, #4]
+    40080324:	b90008c2 	str	w2, [x6, #8]
+    40080328:	b9000cc3 	str	w3, [x6, #12]
+    4008032c:	110004a5 	add	w5, w5, #0x1
+    40080330:	7100c8bf 	cmp	w5, #0x32
+    40080334:	1a8503e5 	csel	w5, wzr, w5, eq	// eq = none
+    40080338:	b9000085 	str	w5, [x4]
+    4008033c:	580006a8 	ldr	x8, 40080410 <log_event_done+0xbc>
+    40080340:	b9400109 	ldr	w9, [x8]
+    40080344:	7100c93f 	cmp	w9, #0x32
+    40080348:	5400006a 	b.ge	40080354 <log_event_done>  // b.tcont
+    4008034c:	11000529 	add	w9, w9, #0x1
+    40080350:	b9000109 	str	w9, [x8]
+
+0000000040080354 <log_event_done>:
+    40080354:	a8c17bfd 	ldp	x29, x30, [sp], #16
+    40080358:	d65f03c0 	ret
     4008035c:	00000000 	udf	#0
-    40080360:	40080de8 	.inst	0x40080de8 ; undefined
+    40080360:	40480000 	.inst	0x40480000 ; undefined
     40080364:	00000000 	udf	#0
-    40080368:	40080450 	.inst	0x40080450 ; undefined
+    40080368:	40080df0 	.inst	0x40080df0 ; undefined
     4008036c:	00000000 	udf	#0
-    40080370:	40080a90 	.inst	0x40080a90 ; undefined
+    40080370:	40080458 	.inst	0x40080458 ; undefined
     40080374:	00000000 	udf	#0
-    40080378:	40080aa0 	.inst	0x40080aa0 ; undefined
+    40080378:	40080a98 	.inst	0x40080a98 ; undefined
     4008037c:	00000000 	udf	#0
-    40080380:	40080ab0 	.inst	0x40080ab0 ; undefined
+    40080380:	40080aa8 	.inst	0x40080aa8 ; undefined
     40080384:	00000000 	udf	#0
-    40080388:	400805e0 	.inst	0x400805e0 ; undefined
+    40080388:	40080ab8 	.inst	0x40080ab8 ; undefined
     4008038c:	00000000 	udf	#0
-    40080390:	40080a94 	.inst	0x40080a94 ; undefined
+    40080390:	400805e8 	.inst	0x400805e8 ; undefined
     40080394:	00000000 	udf	#0
-    40080398:	40080aa4 	.inst	0x40080aa4 ; undefined
+    40080398:	40080a9c 	.inst	0x40080a9c ; undefined
     4008039c:	00000000 	udf	#0
-    400803a0:	40080ab4 	.inst	0x40080ab4 ; undefined
+    400803a0:	40080aac 	.inst	0x40080aac ; undefined
     400803a4:	00000000 	udf	#0
-    400803a8:	40080770 	.inst	0x40080770 ; undefined
+    400803a8:	40080abc 	.inst	0x40080abc ; undefined
     400803ac:	00000000 	udf	#0
-    400803b0:	40080a98 	.inst	0x40080a98 ; undefined
+    400803b0:	40080778 	.inst	0x40080778 ; undefined
     400803b4:	00000000 	udf	#0
-    400803b8:	40080aa8 	.inst	0x40080aa8 ; undefined
+    400803b8:	40080aa0 	.inst	0x40080aa0 ; undefined
     400803bc:	00000000 	udf	#0
-    400803c0:	40080ab8 	.inst	0x40080ab8 ; undefined
+    400803c0:	40080ab0 	.inst	0x40080ab0 ; undefined
     400803c4:	00000000 	udf	#0
-    400803c8:	40080900 	.inst	0x40080900 ; undefined
+    400803c8:	40080ac0 	.inst	0x40080ac0 ; undefined
     400803cc:	00000000 	udf	#0
-    400803d0:	40080a9c 	.inst	0x40080a9c ; undefined
+    400803d0:	40080908 	.inst	0x40080908 ; undefined
     400803d4:	00000000 	udf	#0
-    400803d8:	40080aac 	.inst	0x40080aac ; undefined
+    400803d8:	40080aa4 	.inst	0x40080aa4 ; undefined
     400803dc:	00000000 	udf	#0
-    400803e0:	40080abc 	.inst	0x40080abc ; undefined
+    400803e0:	40080ab4 	.inst	0x40080ab4 ; undefined
     400803e4:	00000000 	udf	#0
-    400803e8:	40080410 	.inst	0x40080410 ; undefined
+    400803e8:	40080ac4 	.inst	0x40080ac4 ; undefined
     400803ec:	00000000 	udf	#0
-    400803f0:	40080420 	.inst	0x40080420 ; undefined
+    400803f0:	40080418 	.inst	0x40080418 ; undefined
     400803f4:	00000000 	udf	#0
-    400803f8:	40080de0 	.inst	0x40080de0 ; undefined
+    400803f8:	40080428 	.inst	0x40080428 ; undefined
     400803fc:	00000000 	udf	#0
-    40080400:	40080ac0 	.inst	0x40080ac0 ; undefined
+    40080400:	40080de8 	.inst	0x40080de8 ; undefined
     40080404:	00000000 	udf	#0
-    40080408:	40080de4 	.inst	0x40080de4 ; undefined
+    40080408:	40080ac8 	.inst	0x40080ac8 ; undefined
     4008040c:	00000000 	udf	#0
+    40080410:	40080dec 	.inst	0x40080dec ; undefined
+    40080414:	00000000 	udf	#0
 
 Disassembly of section .rodata:
 
-0000000040080410 <sensor_table>:
-    40080410:	000003e8 	udf	#1000
-    40080414:	fffffe0c 	.inst	0xfffffe0c ; undefined
-    40080418:	00000fa0 	udf	#4000
-    4008041c:	00000014 	udf	#20
+0000000040080418 <sensor_table>:
+    40080418:	000003e8 	udf	#1000
+    4008041c:	fffffe0c 	.inst	0xfffffe0c ; undefined
+    40080420:	00000fa0 	udf	#4000
+    40080424:	00000014 	udf	#20
 
-0000000040080420 <thresholds>:
-    40080420:	000004b0 	udf	#1200
-    40080424:	00000578 	udf	#1400
-    40080428:	000005dc 	udf	#1500
-    4008042c:	ffffff9c 	.inst	0xffffff9c ; undefined
-    40080430:	ffffff92 	.inst	0xffffff92 ; undefined
-    40080434:	ffffff88 	.inst	0xffffff88 ; undefined
-    40080438:	00001388 	udf	#5000
-    4008043c:	00001194 	udf	#4500
-    40080440:	00000fa0 	udf	#4000
-    40080444:	0000001e 	udf	#30
-    40080448:	00000028 	udf	#40
-    4008044c:	00000032 	udf	#50
+0000000040080428 <thresholds>:
+    40080428:	000004b0 	udf	#1200
+    4008042c:	00000578 	udf	#1400
+    40080430:	000005dc 	udf	#1500
+    40080434:	ffffff9c 	.inst	0xffffff9c ; undefined
+    40080438:	ffffff92 	.inst	0xffffff92 ; undefined
+    4008043c:	ffffff88 	.inst	0xffffff88 ; undefined
+    40080440:	00001388 	udf	#5000
+    40080444:	00001194 	udf	#4500
+    40080448:	00000fa0 	udf	#4000
+    4008044c:	0000001e 	udf	#30
+    40080450:	00000028 	udf	#40
+    40080454:	00000032 	udf	#50
 
 Disassembly of section .data:
 
-0000000040080450 <buffer_rad>:
+0000000040080458 <buffer_rad>:
 	...
 
-00000000400805e0 <buffer_temp>:
+00000000400805e8 <buffer_temp>:
 	...
 
-0000000040080770 <buffer_pres>:
+0000000040080778 <buffer_pres>:
 	...
 
-0000000040080900 <buffer_part>:
+0000000040080908 <buffer_part>:
 	...
 
-0000000040080a90 <idx_rad>:
-    40080a90:	00000000 	udf	#0
-
-0000000040080a94 <idx_temp>:
-    40080a94:	00000000 	udf	#0
-
-0000000040080a98 <idx_pres>:
+0000000040080a98 <idx_rad>:
     40080a98:	00000000 	udf	#0
 
-0000000040080a9c <idx_part>:
+0000000040080a9c <idx_temp>:
     40080a9c:	00000000 	udf	#0
 
-0000000040080aa0 <count_rad>:
+0000000040080aa0 <idx_pres>:
     40080aa0:	00000000 	udf	#0
 
-0000000040080aa4 <count_temp>:
+0000000040080aa4 <idx_part>:
     40080aa4:	00000000 	udf	#0
 
-0000000040080aa8 <count_pres>:
+0000000040080aa8 <count_rad>:
     40080aa8:	00000000 	udf	#0
 
-0000000040080aac <count_part>:
+0000000040080aac <count_temp>:
     40080aac:	00000000 	udf	#0
 
-0000000040080ab0 <avg_rad>:
+0000000040080ab0 <count_pres>:
     40080ab0:	00000000 	udf	#0
 
-0000000040080ab4 <avg_temp>:
+0000000040080ab4 <count_part>:
     40080ab4:	00000000 	udf	#0
 
-0000000040080ab8 <avg_pres>:
+0000000040080ab8 <avg_rad>:
     40080ab8:	00000000 	udf	#0
 
-0000000040080abc <avg_part>:
+0000000040080abc <avg_temp>:
     40080abc:	00000000 	udf	#0
 
-0000000040080ac0 <event_buffer>:
+0000000040080ac0 <avg_pres>:
+    40080ac0:	00000000 	udf	#0
+
+0000000040080ac4 <avg_part>:
+    40080ac4:	00000000 	udf	#0
+
+0000000040080ac8 <event_buffer>:
 	...
 
-0000000040080de0 <event_index>:
-    40080de0:	00000000 	udf	#0
-
-0000000040080de4 <event_count>:
-    40080de4:	00000000 	udf	#0
-
-0000000040080de8 <timer_ticks>:
+0000000040080de8 <event_index>:
     40080de8:	00000000 	udf	#0
+
+0000000040080dec <event_count>:
+    40080dec:	00000000 	udf	#0
+
+0000000040080df0 <timer_ticks>:
+    40080df0:	00000000 	udf	#0
 
 Disassembly of section .debug_line:
 
 0000000000000000 <.debug_line>:
-   0:	00000105 	udf	#261
+   0:	00000107 	udf	#263
    4:	001a0002 	.inst	0x001a0002 ; undefined
    8:	01040000 	.inst	0x01040000 ; undefined
    c:	000a0efb 	.inst	0x000a0efb ; undefined
@@ -429,58 +435,58 @@ Disassembly of section .debug_line:
   2c:	13000000 	sbfx	w0, w0, #0, #1
   30:	1e201f1e 	fcsel	s30, s24, s0, ne	// ne = any
   34:	1e1e1e20 	.inst	0x1e1e1e20 ; undefined
-  38:	1e201e20 	fcsel	s0, s17, s0, ne	// ne = any
-  3c:	1e201e20 	fcsel	s0, s17, s0, ne	// ne = any
-  40:	1e211e1f 	fcsel	s31, s16, s1, ne	// ne = any
-  44:	1e231e1e 	fcsel	s30, s16, s3, ne	// ne = any
-  48:	1f1e1e1e 	fmadd	s30, s16, s30, s7
-  4c:	201e1e20 	.inst	0x201e1e20 ; undefined
-  50:	1f1e1e1e 	fmadd	s30, s16, s30, s7
-  54:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  58:	1e201e1e 	fcsel	s30, s16, s0, ne	// ne = any
-  5c:	201e1e1e 	.inst	0x201e1e1e ; undefined
-  60:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  64:	1e1e1e20 	.inst	0x1e1e1e20 ; undefined
-  68:	1e1e1e21 	.inst	0x1e1e1e21 ; undefined
-  6c:	1e1e201e 	.inst	0x1e1e201e ; undefined
-  70:	20201e1e 	.inst	0x20201e1e ; undefined
-  74:	1f201e1e 	fnmadd	s30, s16, s0, s7
-  78:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  7c:	1e1e201e 	.inst	0x1e1e201e ; undefined
-  80:	1e231e1e 	fcsel	s30, s16, s3, ne	// ne = any
-  84:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  38:	1e1f1e20 	.inst	0x1e1f1e20 ; undefined
+  3c:	1e1f1e1f 	.inst	0x1e1f1e1f ; undefined
+  40:	20211e1f 	.inst	0x20211e1f ; undefined
+  44:	1e1e1e21 	.inst	0x1e1e1e21 ; undefined
+  48:	1e1e1e23 	.inst	0x1e1e1e23 ; undefined
+  4c:	1e201f1e 	fcsel	s30, s24, s0, ne	// ne = any
+  50:	1e1e201e 	.inst	0x1e1e201e ; undefined
+  54:	1e1e1f1e 	.inst	0x1e1e1f1e ; undefined
+  58:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  5c:	1e1e1e20 	.inst	0x1e1e1e20 ; undefined
+  60:	1e1e201e 	.inst	0x1e1e201e ; undefined
+  64:	1e201e1e 	fcsel	s30, s16, s0, ne	// ne = any
+  68:	1e211e1e 	fcsel	s30, s16, s1, ne	// ne = any
+  6c:	201e1e1e 	.inst	0x201e1e1e ; undefined
+  70:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  74:	1e1e201f 	.inst	0x1e1e201f ; undefined
+  78:	1e1e1f20 	.inst	0x1e1e1f20 ; undefined
+  7c:	201e1e1e 	.inst	0x201e1e1e ; undefined
+  80:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  84:	1e1e1e23 	.inst	0x1e1e1e23 ; undefined
   88:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
   8c:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  90:	1e201e1e 	fcsel	s30, s16, s0, ne	// ne = any
-  94:	1e1f1e1f 	.inst	0x1e1f1e1f ; undefined
-  98:	1f1f1e1f 	fmadd	s31, s16, s31, s7
-  9c:	1e201e1e 	fcsel	s30, s16, s0, ne	// ne = any
-  a0:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  90:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  94:	1e1f1e20 	.inst	0x1e1f1e20 ; undefined
+  98:	1e1f1e1f 	.inst	0x1e1f1e1f ; undefined
+  9c:	1e1e1f1f 	.inst	0x1e1e1f1f ; undefined
+  a0:	1e1e1e20 	.inst	0x1e1e1e20 ; undefined
   a4:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  a8:	1f1e1e1e 	fmadd	s30, s16, s30, s7
-  ac:	1e1e201e 	.inst	0x1e1e201e ; undefined
+  a8:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  ac:	201e1f1e 	.inst	0x201e1f1e ; undefined
   b0:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
   b4:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  b8:	1e1e1f1e 	.inst	0x1e1e1f1e ; undefined
+  b8:	1f1e1e1e 	fmadd	s30, s16, s30, s7
   bc:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  c0:	1f1f1e1f 	fmadd	s31, s16, s31, s7
-  c4:	201e1e1e 	.inst	0x201e1e1e ; undefined
-  c8:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  c0:	1e1f1e1e 	.inst	0x1e1f1e1e ; undefined
+  c4:	1e1e1f1f 	.inst	0x1e1e1f1f ; undefined
+  c8:	1e1e201e 	.inst	0x1e1e201e ; undefined
   cc:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
   d0:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
   d4:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  d8:	1f1e1e1e 	fmadd	s30, s16, s30, s7
-  dc:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
-  e0:	1e1f1e1e 	.inst	0x1e1f1e1e ; undefined
+  d8:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  dc:	1e1e1f1e 	.inst	0x1e1e1f1e ; undefined
+  e0:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
   e4:	1e1f1e1f 	.inst	0x1e1f1e1f ; undefined
-  e8:	201e1f1f 	.inst	0x201e1f1f ; undefined
-  ec:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+  e8:	1f1f1e1f 	fmadd	s31, s16, s31, s7
+  ec:	1e1e201e 	.inst	0x1e1e201e ; undefined
   f0:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
   f4:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
   f8:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
   fc:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
- 100:	1e1f1e1e 	.inst	0x1e1f1e1e ; undefined
- 104:	01003002 	.inst	0x01003002 ; undefined
+ 100:	1e1e1e1e 	.inst	0x1e1e1e1e ; undefined
+ 104:	30021e1f 	adr	xzr, 44c5 <_start-0x4007bb3b>
  108:	Address 0x108 is out of bounds.
 
 
@@ -493,7 +499,7 @@ Disassembly of section .debug_info:
    c:	00000000 	udf	#0
   10:	40080000 	.inst	0x40080000 ; undefined
   14:	00000000 	udf	#0
-  18:	40080410 	.inst	0x40080410 ; undefined
+  18:	40080418 	.inst	0x40080418 ; undefined
 	...
   24:	00000007 	udf	#7
   28:	00000023 	udf	#35
@@ -518,7 +524,7 @@ Disassembly of section .debug_aranges:
    c:	00000000 	udf	#0
   10:	40080000 	.inst	0x40080000 ; undefined
   14:	00000000 	udf	#0
-  18:	00000410 	udf	#1040
+  18:	00000418 	udf	#1048
 	...
 
 Disassembly of section .debug_str:

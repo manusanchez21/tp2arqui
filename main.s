@@ -8,8 +8,8 @@ _start:
     mov x19, #0                  // Contador de iteraciones del bucle principal (0..4)
 
 main_loop:
-    cmp x19, #5                  // 5 ciclos completos de monitoreo
-    b.ge main_end
+    cmp x19, #100                  // 5 ciclos completos de monitoreo
+    b.ge skip_report
 
     // Incrementar el contador de tiempo global (timer_ticks)
     ldr x0, =timer_ticks
@@ -17,26 +17,30 @@ main_loop:
     add w1, w1, #1
     str w1, [x0]
 
-    // --- Procesar Sensor 0: RAD ---
+    // --- Procesar los 4 sensores ---
     mov x0, #0
     bl process_sensor
 
-    // --- Procesar Sensor 1: TEMP ---
     mov x0, #1
     bl process_sensor
 
-    // --- Procesar Sensor 2: PRES ---
     mov x0, #2
     bl process_sensor
 
-    // --- Procesar Sensor 3: PART ---
     mov x0, #3
     bl process_sensor
 
     add x19, x19, #1
     b main_loop
 
-main_end:
+generate_report:
+    // Subrutina o hito de reporte
+    ret
+
+skip_report:
+    b program_end
+
+program_end:
     /* Fin de ejecución con semihosting */
     mov x0, #0x18
     movk x0, #0x0200, lsl #16
@@ -60,7 +64,7 @@ process_sensor:
     bl sensor_read
     mov x20, x0                  // x20 = valor medido
 
-    // 2. Selección de punteros preservados
+    // 2. Selección de punteros
     ldr x21, =buffer_rad
     ldr x22, =idx_rad
     ldr x23, =count_rad
@@ -103,28 +107,27 @@ setup_done:
     bl buffer_write
 
     // 4. Calcular Promedio Móvil
-    mov x0, x21                  // buffer_ptr (preservado)
-    mov x1, #10                  // ventana = 10 muestras
-    mov x2, x23                  // count_ptr (preservado)
+    mov x0, x21
+    mov x1, #10
+    mov x2, x23
     bl moving_average
-    mov x20, x0                  // x20 = promedio resultante
+    mov x20, x0
 
-    // Guardar promedio en memoria
-    str w20, [x24]               // avg_ptr (preservado)
+    str w20, [x24]               // Guardar promedio en avg_*
 
     // 5. Evaluar Nivel de Alerta
-    mov x0, x20                  // valor promedio
-    mov x1, x19                  // sensor_id
+    mov x0, x20
+    mov x1, x19
     bl check_alert
 
     // 6. Registrar en el buffer de eventos si existe alerta (nivel > 0)
     cbz x0, skip_log
 
-    mov x2, x0                   // x2 = nivel de alerta
-    mov x0, x19                  // x0 = sensor_id
-    mov x1, x20                  // x1 = valor promedio
+    mov x2, x0
+    mov x0, x19
+    mov x1, x20
     ldr x3, =timer_ticks
-    ldr w3, [x3]                 // x3 = timestamp
+    ldr w3, [x3]
     bl log_event
 
 skip_log:
@@ -170,7 +173,7 @@ sensor_read_part:
 sensor_read_error:
     mov x0, #0
 sensor_read_done:
-    sxtw x0, w0                  // Extensión de signo de 32 a 64 bits
+    sxtw x0, w0
     ldp x29, x30, [sp], #16
     ret
 

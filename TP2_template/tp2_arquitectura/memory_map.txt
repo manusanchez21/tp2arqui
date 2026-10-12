@@ -1,0 +1,61 @@
+
+Configuración de la Memoria
+
+Nombre           Origen             Longitud           Atributos
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Guión del enlazador y mapa de memoria
+
+LOAD main.o
+                0x0000000040080000                . = 0x40080000
+
+.text           0x0000000040080000      0x4c8
+ *(.text*)
+ .text          0x0000000040080000      0x4c8 main.o
+                0x0000000040080000                _start
+
+.iplt           0x00000000400804c8        0x0
+ .iplt          0x00000000400804c8        0x0 main.o
+
+.rodata         0x00000000400804c8       0x40
+ *(.rodata*)
+ .rodata        0x00000000400804c8       0x40 main.o
+
+.rela.dyn       0x0000000040080508        0x0
+ .rela.iplt     0x0000000040080508        0x0 main.o
+ .rela.text     0x0000000040080508        0x0 main.o
+
+.data           0x0000000040080508      0x99c
+ *(.data*)
+ .data          0x0000000040080508      0x99c main.o
+
+.igot.plt       0x0000000040080ea8        0x0
+ .igot.plt      0x0000000040080ea8        0x0 main.o
+
+.bss            0x0000000040080ea8        0x0
+ *(.bss*)
+ .bss           0x0000000040080ea8        0x0 main.o
+ *(COMMON)
+                0x0000000040480000                _stack_end = 0x40480000
+
+/DISCARD/
+ *(.comment)
+ *(.note*)
+OUTPUT(main.elf elf64-littleaarch64)
+LOAD linker stubs
+
+.debug_line     0x0000000000000000      0x141
+ .debug_line    0x0000000000000000      0x141 main.o
+
+.debug_info     0x0000000000000000       0x2e
+ .debug_info    0x0000000000000000       0x2e main.o
+
+.debug_abbrev   0x0000000000000000       0x14
+ .debug_abbrev  0x0000000000000000       0x14 main.o
+
+.debug_aranges  0x0000000000000000       0x30
+ .debug_aranges
+                0x0000000000000000       0x30 main.o
+
+.debug_str      0x0000000000000000       0x3d
+ .debug_str     0x0000000000000000       0x3d main.o

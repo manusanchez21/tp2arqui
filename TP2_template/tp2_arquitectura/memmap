@@ -1,0 +1,37 @@
+/* ============================================================
+   memmap - Linker script para TP2 ARMv8
+   QEMU virt: RAM inicia en 0x40000000
+   Codigo en 0x40080000, stack en 0x40480000
+   ============================================================ */
+
+ENTRY(_start)
+
+SECTIONS
+{
+    . = 0x40080000;
+
+    .text : {
+        *(.text*)
+    }
+
+    .rodata : ALIGN(8) {
+        *(.rodata*)
+    }
+
+    .data : ALIGN(8) {
+        *(.data*)
+    }
+
+    .bss : ALIGN(8) {
+        *(.bss*)
+        *(COMMON)
+    }
+
+    /* Stack al final de la RAM disponible: 0x40480000 */
+    _stack_end = 0x40480000;
+
+    /DISCARD/ : {
+        *(.comment)
+        *(.note*)
+    }
+}
