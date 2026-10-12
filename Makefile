@@ -21,4 +21,4 @@ runQEMU:
 	qemu-system-aarch64 -s -S -machine virt -cpu cortex-a53 -machine type=virt -nographic -smp 1 -m 64 -kernel kernel.img
 
 runGDB:
-	gdb-multiarch main.elf -ex "target remote localhost:1234" -ex "break *0x40080000" -ex "continue"
+	gdb-multiarch -nx main.elf -ex "target remote localhost:1234"

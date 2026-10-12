@@ -11,31 +11,32 @@ Linker script and memory map
 LOAD main.o
                 0x0000000040080000                . = 0x40080000
 
-.text           0x0000000040080000       0x20
+.text           0x0000000040080000      0x410
  *(.text*)
- .text          0x0000000040080000       0x20 main.o
+ .text          0x0000000040080000      0x410 main.o
                 0x0000000040080000                _start
 
-.iplt           0x0000000040080020        0x0
- .iplt          0x0000000040080020        0x0 main.o
+.iplt           0x0000000040080410        0x0
+ .iplt          0x0000000040080410        0x0 main.o
 
-.rela.dyn       0x0000000040080020        0x0
- .rela.iplt     0x0000000040080020        0x0 main.o
- .rela.text     0x0000000040080020        0x0 main.o
-
-.rodata
+.rodata         0x0000000040080410       0x40
  *(.rodata*)
+ .rodata        0x0000000040080410       0x40 main.o
 
-.data           0x0000000040080020        0x0
+.rela.dyn       0x0000000040080450        0x0
+ .rela.iplt     0x0000000040080450        0x0 main.o
+ .rela.text     0x0000000040080450        0x0 main.o
+
+.data           0x0000000040080450      0x99c
  *(.data*)
- .data          0x0000000040080020        0x0 main.o
+ .data          0x0000000040080450      0x99c main.o
 
-.igot.plt       0x0000000040080020        0x0
- .igot.plt      0x0000000040080020        0x0 main.o
+.igot.plt       0x0000000040080df0        0x0
+ .igot.plt      0x0000000040080df0        0x0 main.o
 
-.bss            0x0000000040080020        0x0
+.bss            0x0000000040080df0        0x0
  *(.bss*)
- .bss           0x0000000040080020        0x0 main.o
+ .bss           0x0000000040080df0        0x0 main.o
  *(COMMON)
                 0x0000000040480000                _stack_end = 0x40480000
 
@@ -45,8 +46,8 @@ LOAD main.o
 OUTPUT(main.elf elf64-littleaarch64)
 LOAD linker stubs
 
-.debug_line     0x0000000000000000       0x3a
- .debug_line    0x0000000000000000       0x3a main.o
+.debug_line     0x0000000000000000      0x109
+ .debug_line    0x0000000000000000      0x109 main.o
 
 .debug_info     0x0000000000000000       0x2e
  .debug_info    0x0000000000000000       0x2e main.o
